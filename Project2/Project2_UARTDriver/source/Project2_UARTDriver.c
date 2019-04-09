@@ -45,10 +45,12 @@
 
 ring_t * TX_ring;
 ring_t * RX_ring;
+ring_t * report_ring;
 int stats[256];
 
 
 int main(void) {
+
 
 
 	uint32_t baudrate = 115200;
@@ -57,8 +59,9 @@ int main(void) {
     for(int i = 0; i < 256; i++)
     	stats[i] = 0;
 
-    TX_ring = init(8);
-    RX_ring = init(8);
+    TX_ring = init(10);
+    RX_ring = init(10);
+    report_ring = init(1000);
 
 #ifdef BLOCKING
     UART_writeData_blocking('\n');
@@ -83,8 +86,6 @@ int main(void) {
 #ifdef BLOCKING
 	    char RX_char = UART_readData_blocking();
 	    UART_writeData_blocking(RX_char);
-	    add_stat(RX_char);
-	    report_stats();
 
 #else
     	GPIOB->PTOR = (1 << 18);  // toggle Red LED

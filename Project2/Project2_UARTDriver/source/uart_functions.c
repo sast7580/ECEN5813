@@ -6,6 +6,7 @@
  */
 #include "uart_functions.h"
 
+extern ring_t * report_ring;
 void add_stat(char occurence)
 {
 	int s = (int) occurence;
@@ -14,25 +15,59 @@ void add_stat(char occurence)
 
 void report_stats()
 {
+
+	insert(report_ring, '\n');
+	insert(report_ring, '\r');
+	insert(report_ring, '-');
+	insert(report_ring, '-');
+
+	insert(report_ring, '\n');
+	insert(report_ring, '\r');
+	insert(report_ring, '-');
+	insert(report_ring, '-');
+	insert(report_ring, '-');
+	insert(report_ring, 'R');
+	insert(report_ring, 'e');
+	insert(report_ring, 'p');
+	insert(report_ring, 'o');
+	insert(report_ring, 'r');
+	insert(report_ring, 't');
+	insert(report_ring, '-');
+	insert(report_ring, '-');
+	insert(report_ring, '-');
+
 	for(int i = 0; i<(sizeof(stats)/sizeof(int)); i++)
 	{
 		if(stats[i] > 0){
-			UART_writeData_blocking('\n');
-			UART_writeData_blocking('\r');
-			UART_writeData_blocking((char) i);
-			UART_writeData_blocking(' ');
-			UART_writeData_blocking('-');
-			UART_writeData_blocking(' ');
-			UART_writeData_blocking((char)(stats[i] + 48));
-			UART_writeData_blocking('\n');
-			UART_writeData_blocking('\r');
+			insert(report_ring, '\n');
+			insert(report_ring, '\r');
+			insert(report_ring, (char) i);
+			insert(report_ring, ' ');
+			insert(report_ring, '-');
+			insert(report_ring, ' ');
+			if(stats[i] > 9)
+			{
+				insert(report_ring, (char)((stats[i]/10)+48));
+				insert(report_ring, (char)((stats[i] % 10)+48));
+
+			}
+			else
+				insert(report_ring, (char)(stats[i] + 48));
 		}
 	}
+
+	insert(report_ring, '\n');
+	insert(report_ring, '\r');
+	insert(report_ring, '-');
+	insert(report_ring, '-');
+	insert(report_ring, '-');
+	insert(report_ring, '\n');
+	insert(report_ring, '\r');
+	tx_ring(report_ring);
 }
 
 void UART0_init(uint32_t baudrate)
 {
-
 	 //Enable Port A Clock Gate control - SCGC5
 	 SIM->SCGC5 |= SIM_SCGC5_PORTA_MASK;
 	 //Enable UART0 Clock Gate control - SCGC4
@@ -48,7 +83,6 @@ void UART0_init(uint32_t baudrate)
 
     //Disable TX and RX before changing settings
     UART0->C2 &= ~UART_C2_TE_MASK & ~UART_C2_RE_MASK;
-
 
     //Set the Baudrate
     uint32_t sbr = 0;
@@ -69,12 +103,10 @@ void UART0_init(uint32_t baudrate)
 #else
     	//UART0->C2 = UART0->C2 | UART_C2_TIE_MASK            //Transmt Interrupt Enable          (Transmit Data Register Empty)
                                   //| UART_C2_TCIE_MASK          //Transmit Complete Interrupt Enable (Transmission Complete)
-                                  //| UART_C2_RIE_MASK;           //Receiver Interrupt Enable         (Receive Data Register Full)
+                                  //| UART_C2_RIE_MASK;         check_TX_ready() && check_TX_ready() &&   //Receiver Interrupt Enable         (Receive Data Register Full)
 	NVIC_EnableIRQ(UART0_IRQn);
 	UART0->C2 |= UART_C2_RIE_MASK;
-
 #endif
-
 }
 
 #ifdef BLOCKING
@@ -109,33 +141,68 @@ void UART0_IRQHandler()
 	char TXed_char;
 	char RXed_char;
 
-	// receive interrupt
+	NVIC_DisableIRQ(UART0_IRQn);
+
+	//UART0->C2 &= ~UART_C2_RIE_MASK;
+
 	//Check receive buffer has data, RX_ring is not full
-	if((UART0->S1 & UART_S1_RDRF_MASK) && (((RX_ring->Ini + 1) % RX_ring->Length) != RX_ring->Outi))
+	if((UART0->S1 & UART_S1_RDRF_MASK))
 	{
 		RXed_char = UART0->D;
-
 		int store_result = insert(RX_ring, RXed_char);
 		//If receive buffer is full, disable interrupts
-		if(store_result == -1)
-			UART0->C2 &= ~UART_C2_RIE_MASK;	// Disable RX Interrupt for control register 2
+//		if(store_result == -1)
+//			UART0->C2 &= ~UART_C2_RIE_MASK;	// Disable RX Interrupt for control register 2
 
 		add_stat(RXed_char);
 		remove_entry(RX_ring, &RXed_char);
-		insert(TX_ring, RXed_char);
+		TX_char(TX_ring, RXed_char);
 
-		UART0->C2 |= UART_C2_RIE_MASK;	// Enable RX Interrupt for control register 2
+		//UART0->C2 |= UART_C2_RIE_MASK;	// Enable RX Interrupt for control register 2
 	}
-
-	// transmit interrupt
-	//check register is empty, ring is not empty, previous transmission is complete
-	if((UART0->S1 & UART_S1_TDRE_MASK) && (TX_ring->Outi != TX_ring->Ini) && (UART0->S1 & UART_S1_TC_MASK))
-	{
-		remove_entry(TX_ring, &TXed_char);
-		UART0->D = TXed_char;
-	}
-
+	report_stats();
+	NVIC_EnableIRQ(UART0_IRQn);
 }
+
+bool check_TX_ready()
+{
+	//check TX register is empty and previous transmission is complete
+	if((UART0->S1 & UART_S1_TDRE_MASK) && (UART0->S1 & UART_S1_TC_MASK))
+		return true;
+	else
+		return false;
+}
+
+int tx_ring(ring_t * ring)
+{
+	while(entries(ring) > 0)
+	{
+		if(check_TX_ready())
+		{
+			char removed;
+			remove_entry(ring, &removed);
+			UART0->D = removed;
+		}
+	}
+	return 0;
+}
+
+int TX_char(ring_t * ring, char TX)
+{
+	insert(ring, TX);
+	char removed;
+
+	//check TX is ready and ring is not empty
+	if(check_TX_ready())
+	{
+		remove_entry(ring, &removed);
+		UART0->D = removed;
+		return 0;
+	}
+	else
+		return -1;
+}
+
 #endif
 
 

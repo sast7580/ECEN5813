@@ -17,7 +17,7 @@
 #include "fsl_debug_console.h"
 #include "ring.h"
 
-#define BLOCKING	1
+//#define BLOCKING	1
 
 
 extern ring_t * TX_ring;
@@ -27,8 +27,13 @@ extern int stats[256];
 void UART0_init(uint32_t baudrate);
 void UART_writeData_blocking(char TXed_char);
 char UART_readData_blocking();
+bool check_TX_ready();
+int TX_char(ring_t * ring, char TX);
+int tx_ring(ring_t * ring);
+
 
 void add_stat(char occurence);
 void report_stats();
+
 
 #endif /* UART_FUNCTIONS_H_ */
