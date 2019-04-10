@@ -51,10 +51,9 @@ int stats[256];
 
 int main(void) {
 
-
-
 	uint32_t baudrate = 115200;
     UART0_init(baudrate);
+    enable_leds();
 
     for(int i = 0; i < 256; i++)
     	stats[i] = 0;
@@ -88,7 +87,7 @@ int main(void) {
 	    UART_writeData_blocking(RX_char);
 
 #else
-    	GPIOB->PTOR = (1 << 18);  // toggle Red LED
+	    GPIOD->PTOR = (1 << 1);  // toggle blue LED
 #endif
     }
 

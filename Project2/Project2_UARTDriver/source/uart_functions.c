@@ -96,12 +96,12 @@ void UART0_init(uint32_t baudrate)
 
 #ifdef BLOCKING
 
-	UART0->C2 = UART0->C2 & ~UART_C2_TIE_MASK            //Transmt Interrupt Enable          (Transmit Data Register Empty)
+	UART0->C2 = UART0->C2 & ~UART_C2_TIE_MASK            //Transmit Interrupt Enable          (Transmit Data Register Empty)
                               & ~UART_C2_TCIE_MASK          //Transmit Complete Interrupt Enable (Transmission Complete)
                               & ~UART_C2_RIE_MASK;           //Receiver Interrupt Enable         (Receive Data Register Full)
 
 #else
-    	//UART0->C2 = UART0->C2 | UART_C2_TIE_MASK            //Transmt Interrupt Enable          (Transmit Data Register Empty)
+    	//UART0->C2 = UART0->C2 | UART_C2_TIE_MASK            //Transmit Interrupt Enable          (Transmit Data Register Empty)
                                   //| UART_C2_TCIE_MASK          //Transmit Complete Interrupt Enable (Transmission Complete)
                                   //| UART_C2_RIE_MASK;         check_TX_ready() && check_TX_ready() &&   //Receiver Interrupt Enable         (Receive Data Register Full)
 	NVIC_EnableIRQ(UART0_IRQn);
@@ -203,6 +203,27 @@ int TX_char(ring_t * ring, char TX)
 		return -1;
 }
 
+void enable_leds()
+{
+	// enable port B (red and green) and port D (blue)
+	SIM->SCGC5 |= SIM_SCGC5_PORTB_MASK;
+    SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
+
+	PORTB->PCR[18] = PORT_PCR_MUX(1); 							// activate red led GPIO in Pin Mux Control
+	PORTB->PCR[19] = PORT_PCR_MUX(1);							// activate green led GPIO in Pin Mux Control
+	PORTD->PCR[1] = PORT_PCR_MUX(1);							// activate blue led GPIO in Pin Mux Control
+
+	// red led
+	GPIOB->PSOR |= (1 << 18);									// port set (on)
+	GPIOB->PDDR |= (1 << 18);									// port data direction
+
+	// green led
+	GPIOB->PSOR |= (1 << 19);									// port set (on)
+	GPIOB->PDDR |= (1 << 19);									// port data direction
+
+	// blue led
+	GPIOD->PSOR = (1 << 1);										// port set (on)
+	GPIOD->PDDR |= (1 << 1);									// port data direction
+}
+
 #endif
-
-
