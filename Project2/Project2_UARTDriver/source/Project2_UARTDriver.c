@@ -79,8 +79,7 @@ int main(void) {
     UART_writeData_blocking(' ');
     UART_writeData_blocking('=');
     UART_writeData_blocking(' ');
-
-#endif
+#else
 
 #ifdef BLOCKING
     UART_writeData_blocking('\n');
@@ -95,7 +94,7 @@ int main(void) {
     UART_writeData_blocking('g');
     UART_writeData_blocking('\n');
     UART_writeData_blocking('\r');
-#endif
+#else
 
 #ifdef NONBLOCKING
     UART_writeData_blocking('\n');
@@ -112,20 +111,40 @@ int main(void) {
     UART_writeData_blocking('s');
     UART_writeData_blocking('\n');
     UART_writeData_blocking('\r');
+#else
+    // fibonacci
+    UART_writeData_blocking('\n');
+    UART_writeData_blocking('\r');
+    UART_writeData_blocking('F');
+    UART_writeData_blocking('i');
+    UART_writeData_blocking('b');
+    UART_writeData_blocking('o');
+    UART_writeData_blocking('n');
+    UART_writeData_blocking('a');
+    UART_writeData_blocking('c');
+    UART_writeData_blocking('c');
+    UART_writeData_blocking('i');
+    UART_writeData_blocking('\n');
+    UART_writeData_blocking('\r');
+#endif
+#endif
 #endif
 
     //Main Loop
     while(1)
     {
 #ifdef ELEMENTS
-	    int count = entries( RX_ring );
-	    UART_writeData_blocking(count);
-#endif
+	    wait(1000);
+    	int count = entries( RX_ring );
+	    char string = '0' + count;
+	    wait(1000);
+	    UART_writeData_blocking(string);
+#else
 
 #ifdef BLOCKING
 	    char RX_char = UART_readData_blocking();
 	    UART_writeData_blocking(RX_char);
-#endif
+#else
 
 #ifdef NONBLOCKING
 	    // toggle blue LED
@@ -133,6 +152,118 @@ int main(void) {
 	    wait(30);
 	    GPIOD->PTOR = (1 << 1);
 	    wait(30);
+#else
+	    // fibonacci
+	    int first = 1;
+	    int previous = 0;
+	    int next;
+
+        UART_writeData_blocking('\n');
+        UART_writeData_blocking('\r');
+
+	    while (first < 1000)
+	    {
+	    	next = first + previous;
+
+	    	if(first < 10)
+	    	{
+	    		char first_char = '0' + first;
+
+	    		UART_writeData_blocking(first_char);
+	    		UART_writeData_blocking(',');
+	    		UART_writeData_blocking(' ');
+	    	    wait(3000);
+	    	}
+	    	if(first == 13)
+	    	{
+	    		UART_writeData_blocking('1');
+	    		UART_writeData_blocking('3');
+	    		UART_writeData_blocking(',');
+	    		UART_writeData_blocking(' ');
+	    	    wait(3000);
+	    	}
+	    	if(first == 21)
+	    	{
+	    		UART_writeData_blocking('2');
+	    		UART_writeData_blocking('1');
+	    		UART_writeData_blocking(',');
+	    		UART_writeData_blocking(' ');
+	    	    wait(3000);
+	    	}
+	    	if(first == 34)
+	    	{
+	    		UART_writeData_blocking('3');
+	    		UART_writeData_blocking('4');
+	    		UART_writeData_blocking(',');
+	    		UART_writeData_blocking(' ');
+	    	    wait(3000);
+	    	}
+	    	if(first == 55)
+	    	{
+	    		UART_writeData_blocking('5');
+	    		UART_writeData_blocking('5');
+	    		UART_writeData_blocking(',');
+	    		UART_writeData_blocking(' ');
+	    	    wait(3000);
+	    	}
+	    	if(first == 89)
+	    	{
+	    		UART_writeData_blocking('8');
+	    		UART_writeData_blocking('9');
+	    		UART_writeData_blocking(',');
+	    		UART_writeData_blocking(' ');
+	    	    wait(3000);
+	    	}
+	    	if(first == 144)
+	    	{
+	    		UART_writeData_blocking('1');
+	    		UART_writeData_blocking('4');
+	    		UART_writeData_blocking('4');
+	    		UART_writeData_blocking(',');
+	    		UART_writeData_blocking(' ');
+	    	    wait(3000);
+	    	}
+	    	if(first == 233)
+	    	{
+	    		UART_writeData_blocking('2');
+	    		UART_writeData_blocking('3');
+	    		UART_writeData_blocking('3');
+	    		UART_writeData_blocking(',');
+	    		UART_writeData_blocking(' ');
+	    	    wait(3000);
+	    	}
+	    	if(first == 377)
+	    	{
+	    		UART_writeData_blocking('3');
+	    		UART_writeData_blocking('7');
+	    		UART_writeData_blocking('7');
+	    		UART_writeData_blocking(',');
+	    		UART_writeData_blocking(' ');
+	    	    wait(3000);
+	    	}
+	    	if(first == 610)
+	    	{
+	    		UART_writeData_blocking('6');
+	    		UART_writeData_blocking('1');
+	    		UART_writeData_blocking('0');
+	    		UART_writeData_blocking(',');
+	    		UART_writeData_blocking(' ');
+	    	    wait(3000);
+	    	}
+	    	if(first == 987)
+	    	{
+	    		UART_writeData_blocking('9');
+	    		UART_writeData_blocking('8');
+	    		UART_writeData_blocking('7');
+	    		UART_writeData_blocking(',');
+	    		UART_writeData_blocking(' ');
+	    	    wait(3000);
+	    	}
+	    	previous = first;
+	    	first = next;
+	    }
+#endif
+#endif
 #endif
     }
 

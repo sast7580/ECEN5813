@@ -95,50 +95,23 @@ void UART0_init(uint32_t baudrate)
     //Enable TX and RX
     UART0->C2 = UART0->C2 | UART_C2_TE_MASK | UART_C2_RE_MASK;
 
-#ifdef BLOCKING
-
-	UART0->C2 = UART0->C2 & ~UART_C2_TIE_MASK            //Transmit Interrupt Enable          (Transmit Data Register Empty)
-                              & ~UART_C2_TCIE_MASK          //Transmit Complete Interrupt Enable (Transmission Complete)
-                              & ~UART_C2_RIE_MASK;           //Receiver Interrupt Enable         (Receive Data Register Full)
-
-#else
+#ifdef NONBLOCKING
     	//UART0->C2 = UART0->C2 | UART_C2_TIE_MASK            //Transmit Interrupt Enable          (Transmit Data Register Empty)
                                   //| UART_C2_TCIE_MASK          //Transmit Complete Interrupt Enable (Transmission Complete)
                                   //| UART_C2_RIE_MASK;         check_TX_ready() && check_TX_ready() &&   //Receiver Interrupt Enable         (Receive Data Register Full)
 	NVIC_EnableIRQ(UART0_IRQn);
 	UART0->C2 |= UART_C2_RIE_MASK;
-#endif
-}
 
-#ifdef ELEMENTS
-void UART_writeData_blocking(char TXed_char)
-{
-    while(!(UART0->S1 & UART_S1_TDRE_MASK))
-    {
-    	//Wait until transmit data buffer is empty
-    }
-    UART0->D = TXed_char;
-    while(!(UART0->S1 & UART_S1_TC_MASK))
-    {
-    	//Wait until transmitter activity is complete
-    }
-}
+#else
+
+	UART0->C2 = UART0->C2 & ~UART_C2_TIE_MASK            //Transmit Interrupt Enable          (Transmit Data Register Empty)
+                              & ~UART_C2_TCIE_MASK          //Transmit Complete Interrupt Enable (Transmission Complete)
+                              & ~UART_C2_RIE_MASK;           //Receiver Interrupt Enable         (Receive Data Register Full)
+
 #endif
+}
 
 #ifdef BLOCKING
-
-void UART_writeData_blocking(char TXed_char)
-{
-    while(!(UART0->S1 & UART_S1_TDRE_MASK))
-    {
-    	//Wait until transmit data buffer is empty
-    }
-    UART0->D = TXed_char;
-    while(!(UART0->S1 & UART_S1_TC_MASK))
-    {
-    	//Wait until transmitter activity is complete
-    }
-}
 
 char UART_readData_blocking()
 {
@@ -220,19 +193,6 @@ int TX_char(ring_t * ring, char TX)
 	else
 		return -1;
 }
-
-void UART_writeData_blocking(char TXed_char)
-{
-    while(!(UART0->S1 & UART_S1_TDRE_MASK))
-    {
-    	//Wait until transmit data buffer is empty
-    }
-    UART0->D = TXed_char;
-    while(!(UART0->S1 & UART_S1_TC_MASK))
-    {
-    	//Wait until transmitter activity is complete
-    }
-}
 #endif
 
 void enable_leds()
@@ -258,6 +218,19 @@ void enable_leds()
 	GPIOD->PDDR |= (1 << 1);									// port data direction
 }
 
+void UART_writeData_blocking(char TXed_char)
+{
+    while(!(UART0->S1 & UART_S1_TDRE_MASK))
+    {
+    	//Wait until transmit data buffer is empty
+    }
+    UART0->D = TXed_char;
+    while(!(UART0->S1 & UART_S1_TC_MASK))
+    {
+    	//Wait until transmitter activity is complete
+    }
+}
+
 void wait(int time)
 {
 	// count down timer
@@ -266,4 +239,3 @@ void wait(int time)
 	    ;
     }
 }
-

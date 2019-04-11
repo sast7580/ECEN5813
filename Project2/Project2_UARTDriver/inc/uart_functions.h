@@ -16,9 +16,10 @@
 #include "MKL25Z4.h"
 #include "fsl_debug_console.h"
 #include "ring.h"
+#include <stdlib.h>
 
 //#define BLOCKING	1
-#define NONBLOCKING	1
+//#define NONBLOCKING	1
 //#define ELEMENTS	1
 
 extern ring_t * TX_ring;
