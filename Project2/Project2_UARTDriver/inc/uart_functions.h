@@ -18,7 +18,8 @@
 #include "ring.h"
 
 //#define BLOCKING	1
-
+#define NONBLOCKING	1
+//#define ELEMENTS	1
 
 extern ring_t * TX_ring;
 extern ring_t * RX_ring;
@@ -31,6 +32,7 @@ bool check_TX_ready();
 int TX_char(ring_t * ring, char TX);
 int tx_ring(ring_t * ring);
 void enable_leds();
+void wait(int time);
 void add_stat(char occurence);
 void report_stats();
 

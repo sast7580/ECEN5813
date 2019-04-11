@@ -7,6 +7,7 @@
 #include "uart_functions.h"
 
 extern ring_t * report_ring;
+
 void add_stat(char occurence)
 {
 	int s = (int) occurence;
@@ -109,6 +110,21 @@ void UART0_init(uint32_t baudrate)
 #endif
 }
 
+#ifdef ELEMENTS
+void UART_writeData_blocking(char TXed_char)
+{
+    while(!(UART0->S1 & UART_S1_TDRE_MASK))
+    {
+    	//Wait until transmit data buffer is empty
+    }
+    UART0->D = TXed_char;
+    while(!(UART0->S1 & UART_S1_TC_MASK))
+    {
+    	//Wait until transmitter activity is complete
+    }
+}
+#endif
+
 #ifdef BLOCKING
 
 void UART_writeData_blocking(char TXed_char)
@@ -122,7 +138,6 @@ void UART_writeData_blocking(char TXed_char)
     {
     	//Wait until transmitter activity is complete
     }
-
 }
 
 char UART_readData_blocking()
@@ -135,7 +150,10 @@ char UART_readData_blocking()
     RX_char = UART0->D;
     return RX_char;
 }
-#else
+#endif
+
+#ifdef NONBLOCKING
+
 void UART0_IRQHandler()
 {
 	char TXed_char;
@@ -203,6 +221,20 @@ int TX_char(ring_t * ring, char TX)
 		return -1;
 }
 
+void UART_writeData_blocking(char TXed_char)
+{
+    while(!(UART0->S1 & UART_S1_TDRE_MASK))
+    {
+    	//Wait until transmit data buffer is empty
+    }
+    UART0->D = TXed_char;
+    while(!(UART0->S1 & UART_S1_TC_MASK))
+    {
+    	//Wait until transmitter activity is complete
+    }
+}
+#endif
+
 void enable_leds()
 {
 	// enable port B (red and green) and port D (blue)
@@ -226,4 +258,12 @@ void enable_leds()
 	GPIOD->PDDR |= (1 << 1);									// port data direction
 }
 
-#endif
+void wait(int time)
+{
+	// count down timer
+	for(int i = time*1000; i != 0; i--)
+    {
+	    ;
+    }
+}
+

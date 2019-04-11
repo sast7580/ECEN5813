@@ -58,9 +58,29 @@ int main(void) {
     for(int i = 0; i < 256; i++)
     	stats[i] = 0;
 
-    TX_ring = init(10);
-    RX_ring = init(10);
-    report_ring = init(1000);
+    TX_ring = init(14641);
+    RX_ring = init(14641);
+    report_ring = init(14641);
+
+#ifdef ELEMENTS
+    UART_writeData_blocking('\n');
+    UART_writeData_blocking('\r');
+    UART_writeData_blocking('R');
+    UART_writeData_blocking('X');
+    UART_writeData_blocking(' ');
+    UART_writeData_blocking('E');
+    UART_writeData_blocking('l');
+    UART_writeData_blocking('e');
+    UART_writeData_blocking('m');
+    UART_writeData_blocking('e');
+    UART_writeData_blocking('n');
+    UART_writeData_blocking('t');
+    UART_writeData_blocking('s');
+    UART_writeData_blocking(' ');
+    UART_writeData_blocking('=');
+    UART_writeData_blocking(' ');
+
+#endif
 
 #ifdef BLOCKING
     UART_writeData_blocking('\n');
@@ -75,19 +95,44 @@ int main(void) {
     UART_writeData_blocking('g');
     UART_writeData_blocking('\n');
     UART_writeData_blocking('\r');
-#else
-    PRINTF("\n\rInterrupt\n\r");
+#endif
+
+#ifdef NONBLOCKING
+    UART_writeData_blocking('\n');
+    UART_writeData_blocking('\r');
+    UART_writeData_blocking('I');
+    UART_writeData_blocking('n');
+    UART_writeData_blocking('t');
+    UART_writeData_blocking('e');
+    UART_writeData_blocking('r');
+    UART_writeData_blocking('r');
+    UART_writeData_blocking('u');
+    UART_writeData_blocking('p');
+    UART_writeData_blocking('t');
+    UART_writeData_blocking('s');
+    UART_writeData_blocking('\n');
+    UART_writeData_blocking('\r');
 #endif
 
     //Main Loop
     while(1)
     {
+#ifdef ELEMENTS
+	    int count = entries( RX_ring );
+	    UART_writeData_blocking(count);
+#endif
+
 #ifdef BLOCKING
 	    char RX_char = UART_readData_blocking();
 	    UART_writeData_blocking(RX_char);
+#endif
 
-#else
-	    GPIOD->PTOR = (1 << 1);  // toggle blue LED
+#ifdef NONBLOCKING
+	    // toggle blue LED
+	    GPIOD->PTOR = (1 << 1);
+	    wait(30);
+	    GPIOD->PTOR = (1 << 1);
+	    wait(30);
 #endif
     }
 
