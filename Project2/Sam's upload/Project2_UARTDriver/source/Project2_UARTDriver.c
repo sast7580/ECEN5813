@@ -64,10 +64,10 @@ int main(void) {
     	fib_arr[i] = 0;
     }
 
-    TX_ring = init(10000);
-    RX_ring = init(10000);
+    TX_ring = init(100);
+    RX_ring = init(100);
     report_ring = init(10000);
-    fib_ring = init(10000);
+    fib_ring = init(5000);
 
 
 
@@ -108,6 +108,8 @@ int main(void) {
 			fib_arr[fib_index] = fib;
 			fib_index++;
 	    }
+	    else
+	    	clear_fib_arr();
 
 	    for(int i = 0; i < 100000; i++){}
 	    GPIOD->PTOR = (1<<1);

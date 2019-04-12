@@ -102,6 +102,8 @@ void report_stats()
 		insert(fib_ring, ',');
 	}
 
+	insert(fib_ring, '\n');
+	insert(fib_ring, '\r');
 
 	tx_ring(fib_ring);
 	clear_fib_arr();
