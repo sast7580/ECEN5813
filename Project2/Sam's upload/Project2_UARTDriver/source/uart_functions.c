@@ -194,7 +194,7 @@ void UART0_IRQHandler()
 
 	//NVIC_DisableIRQ(UART0_IRQn);
 	//Check receive buffer has data, RX_ring is not full
-	if(check_RX_ready)
+	if(check_RX_ready())
 	{
 		RXed_char = UART0->D;
 		bool check = check_RX_ready();
