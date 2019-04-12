@@ -82,10 +82,10 @@ void report_stats()
 	insert(fib_ring, '\n');
 	insert(fib_ring, '\r');
 
-	insert(report_ring, '0');
-	insert(report_ring, ',');
-	insert(report_ring, '1');
-	insert(report_ring, ',');
+	insert(fib_ring, '0');
+	insert(fib_ring, ',');
+	insert(fib_ring, '1');
+	insert(fib_ring, ',');
 
 	int f = 2;
 	while(fib_arr[f] != 0)
@@ -95,11 +95,11 @@ void report_stats()
 		int j = 0;
 		while(number[j] != '\0')
 		{
-			insert(report_ring, number[j]);
+			insert(fib_ring, number[j]);
 			j++;
 		}
 		f++;
-		insert(report_ring, ',');
+		insert(fib_ring, ',');
 	}
 
 

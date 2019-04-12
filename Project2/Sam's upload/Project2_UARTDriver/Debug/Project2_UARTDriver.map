@@ -2082,24 +2082,24 @@ OUTPUT(Project2_UARTDriver.axf elf32-littlearm)
  .debug_ranges  0x00000000000002f0      0x120 ./drivers/fsl_uart.o
  .debug_ranges  0x0000000000000410       0x18 ./CMSIS/system_MKL25Z4.o
 
-.debug_macro    0x0000000000000000      0x8a2
+.debug_macro    0x0000000000000000      0x896
  .debug_macro   0x0000000000000000       0x29 ./startup/startup_mkl25z4.o
- .debug_macro   0x0000000000000029      0x159 ./source/Project2_UARTDriver.o
- .debug_macro   0x0000000000000182       0xa0 ./source/Project2_UARTDriver.o
- .debug_macro   0x0000000000000222       0x16 ./source/Project2_UARTDriver.o
- .debug_macro   0x0000000000000238       0x10 ./source/Project2_UARTDriver.o
- .debug_macro   0x0000000000000248      0x112 ./source/Project2_UARTDriver.o
- .debug_macro   0x000000000000035a       0x34 ./source/Project2_UARTDriver.o
- .debug_macro   0x000000000000038e       0x2f ./source/mtb.o
- .debug_macro   0x00000000000003bd       0x82 ./source/mtb.o
- .debug_macro   0x000000000000043f       0x10 ./source/mtb.o
- .debug_macro   0x000000000000044f       0x59 ./source/ring.o
- .debug_macro   0x00000000000004a8       0x22 ./source/ring.o
- .debug_macro   0x00000000000004ca       0x11 ./source/semihost_hardfault.o
- .debug_macro   0x00000000000004db      0x155 ./source/uart_functions.o
- .debug_macro   0x0000000000000630       0xec ./drivers/fsl_lpsci.o
- .debug_macro   0x000000000000071c       0xf2 ./drivers/fsl_uart.o
- .debug_macro   0x000000000000080e       0x94 ./CMSIS/system_MKL25Z4.o
+ .debug_macro   0x0000000000000029      0x153 ./source/Project2_UARTDriver.o
+ .debug_macro   0x000000000000017c       0xa0 ./source/Project2_UARTDriver.o
+ .debug_macro   0x000000000000021c       0x16 ./source/Project2_UARTDriver.o
+ .debug_macro   0x0000000000000232       0x10 ./source/Project2_UARTDriver.o
+ .debug_macro   0x0000000000000242      0x112 ./source/Project2_UARTDriver.o
+ .debug_macro   0x0000000000000354       0x34 ./source/Project2_UARTDriver.o
+ .debug_macro   0x0000000000000388       0x2f ./source/mtb.o
+ .debug_macro   0x00000000000003b7       0x82 ./source/mtb.o
+ .debug_macro   0x0000000000000439       0x10 ./source/mtb.o
+ .debug_macro   0x0000000000000449       0x59 ./source/ring.o
+ .debug_macro   0x00000000000004a2       0x22 ./source/ring.o
+ .debug_macro   0x00000000000004c4       0x11 ./source/semihost_hardfault.o
+ .debug_macro   0x00000000000004d5      0x14f ./source/uart_functions.o
+ .debug_macro   0x0000000000000624       0xec ./drivers/fsl_lpsci.o
+ .debug_macro   0x0000000000000710       0xf2 ./drivers/fsl_uart.o
+ .debug_macro   0x0000000000000802       0x94 ./CMSIS/system_MKL25Z4.o
 
 .debug_line     0x0000000000000000     0x1e6c
  .debug_line    0x0000000000000000      0x128 ./startup/startup_mkl25z4.o
@@ -2112,24 +2112,24 @@ OUTPUT(Project2_UARTDriver.axf elf32-littlearm)
  .debug_line    0x0000000000001464      0x7a0 ./drivers/fsl_uart.o
  .debug_line    0x0000000000001c04      0x268 ./CMSIS/system_MKL25Z4.o
 
-.debug_str      0x0000000000000000    0x33c66
+.debug_str      0x0000000000000000    0x33c60
  .debug_str     0x0000000000000000     0x30b3 ./startup/startup_mkl25z4.o
                                        0x310a (size before relaxing)
- .debug_str     0x00000000000030b3    0x2eb76 ./source/Project2_UARTDriver.o
-                                      0x31a69 (size before relaxing)
- .debug_str     0x0000000000031c29      0x532 ./source/mtb.o
+ .debug_str     0x00000000000030b3    0x2eb70 ./source/Project2_UARTDriver.o
+                                      0x31a63 (size before relaxing)
+ .debug_str     0x0000000000031c23      0x532 ./source/mtb.o
                                        0x3216 (size before relaxing)
- .debug_str     0x000000000003215b       0xd4 ./source/ring.o
+ .debug_str     0x0000000000032155       0xd4 ./source/ring.o
                                        0x3674 (size before relaxing)
- .debug_str     0x000000000003222f       0x1f ./source/semihost_hardfault.o
+ .debug_str     0x0000000000032229       0x1f ./source/semihost_hardfault.o
                                        0x2d03 (size before relaxing)
- .debug_str     0x000000000003224e      0x371 ./source/uart_functions.o
-                                      0x31995 (size before relaxing)
- .debug_str     0x00000000000325bf      0xd06 ./drivers/fsl_lpsci.o
+ .debug_str     0x0000000000032248      0x371 ./source/uart_functions.o
+                                      0x3198f (size before relaxing)
+ .debug_str     0x00000000000325b9      0xd06 ./drivers/fsl_lpsci.o
                                       0x31819 (size before relaxing)
- .debug_str     0x00000000000332c5      0x93d ./drivers/fsl_uart.o
+ .debug_str     0x00000000000332bf      0x93d ./drivers/fsl_uart.o
                                       0x3183c (size before relaxing)
- .debug_str     0x0000000000033c02       0x64 ./CMSIS/system_MKL25Z4.o
+ .debug_str     0x0000000000033bfc       0x64 ./CMSIS/system_MKL25Z4.o
                                       0x2fb7b (size before relaxing)
 
 .comment        0x0000000000000000       0x7f

@@ -19,7 +19,6 @@
 
 //#define BLOCKING	1
 //#define ECHO		1
-#define FIB		1
 
 extern ring_t * RX_ring;
 extern ring_t * TX_ring;
@@ -38,9 +37,7 @@ int TX_char(char TX);
 int tx_ring(ring_t * ring);
 
 void report_stats();
-#ifdef FIB
 void clear_fib_arr();
-#endif
 
 
 #endif /* UART_FUNCTIONS_H_ */
